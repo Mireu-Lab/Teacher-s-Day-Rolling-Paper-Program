@@ -1,0 +1,5 @@
+pymysql
+python-multipart
+pydantic
+fastapi[all]
+uvicorn[standard]
