@@ -1,5 +1,4 @@
-pymysql
-python-multipart
+firebase_admin
 pydantic
 fastapi[all]
 uvicorn[standard]
