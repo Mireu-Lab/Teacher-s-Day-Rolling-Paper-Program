@@ -4,28 +4,22 @@ from firebase_admin import db
 
 import re
 
-cred = credentials.Certificate("Data/carnation-mireu-xyz-firebase-adminsdk-p3fgl-a1df3d92e0.json")
-firebase_admin.initialize_app(cred)
+try:
+    app = firebase_admin.get_app()
+except ValueError as e:
+    cred = credentials.Certificate("Data/carnation-mireu-xyz-firebase-adminsdk-p3fgl-a1df3d92e0.json")
+    firebase_admin.initialize_app(cred, {'databaseURL':'https://carnation-mireu-xyz-default-rtdb.firebaseio.com/'})
 
-school = None
-teacher_name = None
-
-grade = None
-class_number = None
-number = None
-
-name = None
-
-def write(memo):
-    global school, teacher_name, grade, class_number, number, name
-    ret = re.sub('[~!@#$%^&*()_-+{}|:;<>?/}]', '', f"{school}.{grade}.{class_number}.{teacher_name}")
+def firebase_write(school, teacher_name, grade, class_number, number, name, memo):
+    ret =  re.sub('[-=.#/?:$}]', '', f"{school}.{grade}.{str(class_number)}.{teacher_name}")
     
     ref = db.reference(ret)
-
     ref.update(
         {
-            'student_name' : name,
-            'student_nunber' : number,
-            "memo" : memo
+            name : {
+                'student_name' : name,
+                'student_nunber' : number,
+                "memo" : memo
+            }
         }
     )

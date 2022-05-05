@@ -1,5 +1,5 @@
 # SQL 모듈 불러오기
-from carnation import read, write
+from carnation import write, read
 
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -8,40 +8,44 @@ import uvicorn
 app = FastAPI()
 
 class ReadData(BaseModel):
-    school = str
-    teacher_name = str
-    class_number = int
-    grade = int
+    school : str
+    teacher_name : str
+    class_number : int
+    grade : int
 
 class WriteData(BaseModel):
-    school = str
-    teacher_name = str
-    grade = int
-    class_number = int
-    number = int
-    name = str
+    school : str
+    teacher_name : str
+    grade : int
+    class_number : int
+    number : int
+    name : str
+    memo : str
 
 @app.get("/")
 async def main():
-    return {"Docs" : "http://execpro.mireu.xyz/"}
+    return {"Docs" : None}
 
 @app.post("/write")
-async def write_api(WriteData:WriteData, mamo:str):
-    write.school = WriteData.school
-    write.teacher_name = WriteData.teacher_name
-    write.grade = WriteData.grade
-    write.class_number = WriteData.class_number
-    write.number = WriteData.number
-    write.name = WriteData.name
-    return write.write(mamo)
+async def write_api(WriteData:WriteData):
+    return write.firebase_write(
+        WriteData.school,
+        WriteData.teacher_name,
+        WriteData.grade,
+        WriteData.class_number,
+        WriteData.number,
+        WriteData.name,
+        WriteData.memo
+    )
 
 @app.post("/read")
 async def read_api(ReadData:ReadData):
-    read.school = ReadData.school
-    read.teacher_name = ReadData.teacher_name
-    read.class_number = ReadData.class_number
-    read.grade = ReadData.grade
-    return read.read()
+    return read.firebase_read(
+        ReadData.school,
+        ReadData.teacher_name,
+        ReadData.class_number,
+        ReadData.grade
+    )
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=80)

@@ -1,4 +1,5 @@
 firebase_admin
+BaseModel
 pydantic
 fastapi[all]
 uvicorn[standard]
